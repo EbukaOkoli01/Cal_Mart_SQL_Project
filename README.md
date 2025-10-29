@@ -1,4 +1,5 @@
 <h1 align="center">🛒 Cal_Mart_SQL_Project</h1>
+<p align="center">A retail mart SQL project exploring customer behavior, sales trends, and supplier performance</p>
 
 OVERVIEW -                                                                                   
 The Cal_Mart database was designed to simulate how a modern retail mart operates and manages its daily transactions through data. It contains five main tables: Users, Products, Orders, Suppliers, and Savings. All connected to track customer behavior, product performance, and financial activities.
