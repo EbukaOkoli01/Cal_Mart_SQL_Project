@@ -1,5 +1,6 @@
-# Cal_Mart_SQL_Project
-OVERVIEW -                                                                                                                                                                                
+<h1 align="center">🛒 Cal_Mart_SQL_Project</h1>
+
+OVERVIEW -                                                                                   
 The Cal_Mart database was designed to simulate how a modern retail mart operates and manages its daily transactions through data. It contains five main tables: Users, Products, Orders, Suppliers, and Savings. All connected to track customer behavior, product performance, and financial activities.
 
 TABLE BREAKDOWN -                                                                                                                                                                             
@@ -22,4 +23,5 @@ Subqueries (EXISTS, ALL, ANY)
 Month-over-Month (MoM) and Year-over-Year (YoY) Analysis                                                                                                                                 
 
 PURPOSE -                                                                                                                                                                             
-To strengthen SQL problem-solving skills by simulating business scenarios that require both data cleaning and insight generation, showing how data drives growth decisions in retail.
+To strengthen SQL problem-solving skills by simulating business scenarios that require both data cleaning and insight generation, showing how data drives growth decisions in retail.                                                                                                
+
