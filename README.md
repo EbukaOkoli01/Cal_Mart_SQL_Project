@@ -57,4 +57,4 @@ The project consists of **28 SQL business questions** divided into categories:
 | G | TOP N, BOTTOM N ANALYSIS | Q25–Q28 |
 
 
-👉 You can view all 28 business questions and their detailed analysis in the **[Insights Folder](Insight/)** section.
+👉 You can view all 28 business questions and their detailed analysis in the **[Insights Folder](Insight/section_A_aggregate_insights.md)** section.
