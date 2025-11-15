@@ -57,4 +57,4 @@ The project consists of **28 SQL business questions** divided into categories:
 | G | TOP N, BOTTOM N ANALYSIS | Q25–Q28 |
 
 
-👉 You can view all 28 business questions and their detailed analysis in the **[Insights Folder](Insight/[(https://github.com/EbukaOkoli01/Cal_Mart_SQL_Project/tree/main/Insights)])** section.
+👉 You can view all 28 business questions and their detailed analysis in the **[Insights Folder](Insight/)** section.
