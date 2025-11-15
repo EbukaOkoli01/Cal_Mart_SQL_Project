@@ -49,11 +49,12 @@ The project consists of **28 SQL business questions** divided into categories:
 | Section | Concept Focus | Questions |
 |----------|----------------|------------|
 | A | Aggregate Functions | Q1–Q4 |
-| B | NULL & CASE Statements | Q5–Q7 |
-| C | Window Functions (Frames) | Q8–Q10 |
-| D | Ranking, NTILE, LAG, LEAD | Q11–Q14 |
-| E–G | Rolling Totals, MoM, YoY & Subqueries | Q15–Q24 |
-| Bonus | Business Insights | Q25–Q28 |
+| B | NULL & CASE Statements | Q5–Q6 |
+| C | Window Functions (Frames) | Q7–Q9 |
+| D | Ranking, NTILE, LAG, LEAD, ROLLING TOTALS | Q10–Q17 |
+| E | Month over Month ANALYSIS | Q18–Q20 |
+| F | SUBQUERY | Q21–Q24 |
+| G | TOP N, BOTTOM N ANALYSIS | Q25–Q28 |
 
 
 👉 You can view all 28 business questions and their detailed analysis in the **[Insights Folder](insights/)** section.
