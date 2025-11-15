@@ -63,7 +63,7 @@ SELECT *,
 FROM previous_month_amount;
 
 
--- 19.	Find which month had the highest revenue growth rate.
+-- 20.	Find which month had the highest revenue growth rate.
 
 WITH previous_month AS 
 (
