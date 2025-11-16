@@ -4,6 +4,15 @@
 ### OVERVIEW -                                                                                   
 The Cal_Mart database was designed to simulate how a modern retail mart operates and manages its daily transactions through data. It contains five main tables: Users, Products, Orders, Suppliers, and Savings. All connected to track customer behavior, product performance, and financial activities.
 
+### BUSINESS CONTEXT
+Cal_Mart is a mid-sized retail company aiming to improve customer loyalty, optimize sales strategies, and monitor supplier performance through data.                                 
+The company wants to understand:
+
+- Which customers contribute the most to revenue
+- What products perform best or worst
+- How sales change over time
+- Which customers are likely to churn or remain active
+
 ### TABLE BREAKDOWN -                                                                                                                                                                             
 - Users: Contains customer details such as name, contact info, and join date.
 - Products: Holds information about all items available in the mart including price, category, and supplier.
