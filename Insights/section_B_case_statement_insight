@@ -1,0 +1,30 @@
+## <div align = "center"> Section B — Case Statement </div>
+
+### Objective
+
+To understand sales and customer distribution by calculating total, average, minimum, and maximum order metrics.
+This section focuses on descriptive and performance analysis — summarizing customer and product activity.
+##
+
+<b> Q5. Some customers haven’t saved in months. Create a query that classifies each customer as:
+'Active Saver' if total savings > 2000 | 'Dormant Saver' otherwise.. </b>                                                   
+### <i> Explanation </i> 
+ To begin my analysis, I started by understanding the customers' spending patterns in the data. This was so I could know who our top customers were and our least buying customers. 
+In the code below, Aggregation was done across each customer to know the total amount each customer has spent, the average amount each customer has spent, the minimum amount and maximum amount spent in total.
+
+### <i> Query: </i>
+
+    USE cal_mart;
+    SELECT 
+    		user_id,
+            SUM(total_amount) AS total_order_amount,
+            ROUND(AVG(total_amount),2) AS avg_order_amount,
+            MIN(total_amount) AS min_order_amount,
+            MAX(total_amount) AS max_order_amount
+    FROM orders
+    GROUP BY user_id;
+### <i> Insight: </i>
+1. The average total amount was 2,075 while the top spender was 5,000
+2. 37.5% (3 of 8) of total customer accounted for over 50% (13,600) of total sales value
+### <i> Result: </i>
+<img width="1365" height="616" alt="image" src="https://github.com/user-attachments/assets/a75594c9-096c-4286-a65b-683fffc862b4" /> <br> 
