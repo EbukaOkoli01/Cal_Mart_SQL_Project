@@ -35,5 +35,31 @@ for each customer then the main query is to work with this new table from the su
 2. The remaining 18.75% (Dormant Savers) have either reduced or stopped saving, indicating lower platform engagement.
 3. Encouraging Dormant Savers through personalized offers or bonus incentives could boost savings activity and customer retention.         
 ### <i> Result: </i>
-<img width="1349" height="556" alt="image" src="https://github.com/user-attachments/assets/c73c939f-c16d-4fe2-ae70-026d8a740dbb" />
- <br> 
+<img width="1349" height="556" alt="image" src="https://github.com/user-attachments/assets/c73c939f-c16d-4fe2-ae70-026d8a740dbb" /><br> 
+
+<b> Q6. Create a new column in your query to show: -'High spender' if total_amount > 3000  - 'Average spender' if between 1500 and 3000
+		-'Low spender' otherwise. </b> 
+### <i> Explanation </i> 
+Similar to question 5, the goal here was to segment customers. However, now we also want to understand customer performance and specifically, which customers spend more or less. The code below has two queries. The subquery has a window function which is to get the sum of the overall amount for each user without reducing the level of details. Then the main query categorises the overall_amount column from the subquery result table.
+### <i> Query: </i>
+
+    SELECT *,
+    		CASE 
+    			WHEN overall_amount > 3000 THEN 'High Spender'
+                WHEN overall_amount BETWEEN 1500 AND 3000 THEN 'Average Spender'
+                ELSE 'Low Spender'
+            END AS customer_classification
+    FROM
+    	(-- Subquery 
+    	SELECT 
+    			user_id,
+    			total_amount,
+    			SUM(total_amount) OVER(PARTITION BY user_id) AS overall_amount
+    	FROM orders ) AS c;
+### <i> Insight: </i>
+1. Users 1, 3, 4, and 6 contribute the largest share of total spending, making them key revenue drivers.
+2. Users 2, 5, and 7 spend moderately, indicating an opportunity to increase their spending through targeted promotions.
+3. User 8 spends the least, suggesting low engagement or potential price sensitivity.
+4. We should Focus on retaining high spenders with loyalty programs, encourage average spenders to increase purchases via promotions, and re-engage low spenders through personalized campaigns.
+### <i> Result: </i>
+<img width="1356" height="615" alt="image" src="https://github.com/user-attachments/assets/cd644d6e-2b12-47fe-a563-4eb94bfc8827" />
