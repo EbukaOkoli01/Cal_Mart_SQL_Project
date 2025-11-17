@@ -1,4 +1,4 @@
-## <div align = "center"> Section B — Case Statement</div>
+## <div align = "center"> Section C — Window Function</div>
 
 ### Objective
 
