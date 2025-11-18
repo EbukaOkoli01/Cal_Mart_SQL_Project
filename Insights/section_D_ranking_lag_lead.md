@@ -60,13 +60,75 @@ This analysis aims to understand customer retention and spending patterns by com
 3. The trend shows decreasing order amounts among returning customers, which may require engagement or retention strategies to boost repeat value. Offer re-engagement promotions to customers whose recent purchases declined.
 4. We should offer re-engagement promotions to customers whose recent purchases declined and also send follow-up reminders to one-time buyers (5–8) to encourage repeat purchases.
 ### <i> Result: </i>
-<img width="1280" height="569" alt="image" src="https://github.com/user-attachments/assets/0108d6be-61df-4916-b3a9-625c3af5c011" />
+<img width="1280" height="569" alt="image" src="https://github.com/user-attachments/assets/0108d6be-61df-4916-b3a9-625c3af5c011" /> <br>
 
 <b> Q13. Identify customers whose spending has increased or decreased compared to their previous purchase. </b>   
 ### <i> Explanation </i>
+The goal of this task is to identify changes in customer spending habits over time, whether their order value is increasing or decreasing.
+This helps detect declining engagement or positive growth trends among repeat buyers. Using the LEAD() window function, each order amount is compared to the next order for the same customer. A CASE statement then classifies each customer’s spending pattern as:
+Increased if spending rose compared to the previous order, Decreased if spending dropped, and Last Purchase — the customer’s most recent order (no subsequent record). This approach provides early indicators of customer churn or growth opportunities.
+### <i> Query: </i>
 
+    SELECT 
+    	   user_id,
+           previous_order,
+           current_order,
+           CASE 
+    			WHEN current_order IS NULL THEN 'Last Purchase'
+    			WHEN previous_order > current_order THEN 'Decreased'
+                WHEN previous_order <  current_order THEN 'Increased'
+                ELSE 'Not Specified'
+           END AS spending_habit
+    FROM
+    (
+    SELECT 
+    	user_id,
+        total_amount AS previous_order,
+        LEAD(total_amount) OVER(PARTITION BY user_id ORDER BY order_date 
+    							ROWS BETWEEN CURRENT ROW AND 1 FOLLOWING) AS current_order
+    FROM orders
+    ) AS t ;
+### <i> Insight: </i>
+1. All customers with multiple purchases (1–4) show a decrease in spending compared to their previous orders. This may signal reduced engagement or lower purchasing power.
+2. Customers 5–8 made only one purchase, so they are tagged as “Last Purchase”, which may indicate new customers or potential churn.
+3. No customer in this dataset showed an increase in spending, which suggests that overall customer value is declining and requires attention.
+4. We can investigate the cause of decreased spending among repeat customers. It could possibly be pricing, satisfaction, or product mix. Also, we should introduce retention campaigns or loyalty points for consistent buyers to encourage higher-value repeat purchases.
+### <i> Result: </i>
+<img width="1339" height="556" alt="image" src="https://github.com/user-attachments/assets/46b7185f-16f7-455b-9897-a61d21b9eacc" /> <br>
 
+<b> Q14. Calculate the cumulative total of sales by month for the entire store./ </b>
+### <i> Explanation </i>
+The purpose of this analysis is to understand the growth of total sales over time by calculating the cumulative total month by month.
+I solved it using Common Table Expression (CTE). The first CTE with name desired_columns is used to get the relevant columns (order_date and total_amount). Then the second CTE total_by_month gets the aggregate of the amount for each month. Finally, a window function (SUM() OVER(ORDER BY month)) is used to calculate the running total, which shows how sales accumulate throughout the year.
+### <i> Query: </i>
 
-
-
-
+    -- Using CTE
+    WITH desired_columns AS
+    (
+    SELECT 
+    		order_date,
+            total_amount
+    FROM orders 
+    ),
+    total_by_month AS
+    (
+    SELECT 
+    		MONTH(order_date) AS `month`,
+            SUM(total_amount) AS total_sales_per_month
+    FROM desired_columns
+    GROUP BY MONTH(order_date)
+    )
+    -- finally, we can get the cumulative total sales by month
+    SELECT 
+    	`month`,
+        total_sales_per_month,
+        SUM(total_sales_per_month) OVER(ORDER BY `month`) AS cummulative_total_sales
+    FROM total_by_month;
+### <i> Insight: </i>
+1. Sales have grown steadily from 3,900 in January to 24,900 by July, showing consistent month-over-month growth.
+2. The highest monthly sales occurred in April (5,000), suggesting a possible peak season or successful campaign during that period.
+3.A slight dip in June (2,800) indicates slower sales activity that could be investigated further.
+4. Overall, the trend suggests a positive growth pattern, meaning the store is experiencing stable performance with moderate seasonal variation.
+5. Also, we need to analyze June’s drop to determine if it was due to fewer orders, stock issues, or reduced customer engagement.
+### <i> Result: </i>
+<img width="1356" height="611" alt="image" src="https://github.com/user-attachments/assets/59d92a45-462e-49bf-a507-a31922e2dca9" /> <br>
