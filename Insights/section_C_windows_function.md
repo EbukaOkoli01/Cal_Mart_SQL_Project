@@ -42,9 +42,9 @@ Using window functions with frames (ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUND
     		ROUND(AVG(total_amount) OVER(ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING),2) AS overall_avg
     FROM orders;
 ### <i> Insight: </i>
-1. 50% of customers have an average order amount below the overall platform average of ₦2,075, while the other 50% are above it.
+1. 50% of customers have an average order amount below the overall platform average of 2,075, while the other 50% are above it.
 This balance shows a diverse customer base. Some are high-value buyers, while others spend modestly.
-2. Customer 6 had the highest average order value (₦5,000), followed by Customers 1 and 7 (around 2,300 - 2,400), indicating they are the top spenders on the platform. Customers 2, 3, and 4 consistently placed smaller order amounts below the overall average, suggesting they are budget-conscious or low-value buyers.
+2. Customer 6 had the highest average order value (5,000), followed by Customers 1 and 7 (around 2,300 - 2,400), indicating they are the top spenders on the platform. Customers 2, 3, and 4 consistently placed smaller order amounts below the overall average, suggesting they are budget-conscious or low-value buyers.
 3. High-value customers (above average) should be prioritized for retention and loyalty rewards. While, low-spending customers can be targeted with promotional discounts or personalized offers to increase their order value.
 ### <i> Result: </i>
 <img width="1358" height="609" alt="image" src="https://github.com/user-attachments/assets/e121109c-1ae1-44e0-9fac-e0e1dbb651c4" /><br>
@@ -69,5 +69,4 @@ The goal of this query was to determine each customer’s first and most recent 
 3. Send reactivation reminders or small discounts to one-time buyers (5–8) to bring them back. Also, we can maintain engagement with active customers (1 & 4) through exclusive loyalty offers.
 ### <i> Result: </i>
 <img width="1355" height="608" alt="image" src="https://github.com/user-attachments/assets/62f84015-c119-4743-a1d5-0cd68bab4890" />
-
 
