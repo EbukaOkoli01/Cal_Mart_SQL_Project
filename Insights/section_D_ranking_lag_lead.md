@@ -132,3 +132,4 @@ I solved it using Common Table Expression (CTE). The first CTE with name desired
 5. Also, we need to analyze June’s drop to determine if it was due to fewer orders, stock issues, or reduced customer engagement.
 ### <i> Result: </i>
 <img width="1356" height="611" alt="image" src="https://github.com/user-attachments/assets/59d92a45-462e-49bf-a507-a31922e2dca9" /> <br>
+
