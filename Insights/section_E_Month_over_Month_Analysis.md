@@ -93,15 +93,47 @@ growth, trends and performance of each month.
 3. Savings performance shows periodic volatility, alternating between sharp increases and steep declines. To build long-term consistency, the company
     should implement strategies that stabilize user saving behavior and maintain engagement throughout the year.
 ### <i> Result: </i>
-<img width="1354" height="595" alt="image" src="https://github.com/user-attachments/assets/d0a602f3-d5d0-4727-8faf-f3a5ce15d18b" />
+<img width="1354" height="595" alt="image" src="https://github.com/user-attachments/assets/d0a602f3-d5d0-4727-8faf-f3a5ce15d18b" /> <br>
 
 
 <b> Q20. Find which month had the highest revenue growth rate.  </b> 
 ### <i> Explanation </i> 
-
+In this question, we only want to identify the month with the highest revenue. From the already established query in Q19, we will add a new line of code which the is the WHERE clause and a subquery. The purpose of this subquery (SELECT MAX(MoM_change) FROM month_over_month_change) is to get only the highest MoM_change then the WHERE function filter the result of the month_over_month_change table and outputs the rows where there is a match (highest MoM change).
 
 ### <i> Query: </i>
 
+    WITH previous_month AS 
+    (
+    SELECT 
+        DATE_FORMAT(order_date, '%m')  AS months,
+        DATE_FORMAT(order_date, '%b')  AS `month`,
+        SUM(total_amount) AS total_sales_per_month,
+        LAG(SUM(total_amount)) OVER(ORDER BY DATE_FORMAT(order_date, '%m') ROWS BETWEEN 1 PRECEDING AND CURRENT ROW) AS previous_month_sales
+    FROM orders
+    GROUP BY DATE_FORMAT(order_date, '%m'), DATE_FORMAT(order_date, '%b') 
+    ),
+    month_over_month_change AS
+    (
+    SELECT 
+    		`month`,
+            months,
+    		total_sales_per_month,
+    		previous_month_sales,
+    		ROUND(((total_sales_per_month - previous_month_sales)/ previous_month_sales),2) * 100 AS MoM_change
+    FROM previous_month
+    )
+     SELECT
+            `month`,
+             total_sales_per_month,
+             previous_month_sales,
+             MoM_change
+    FROM month_over_month_change
+    WHERE MoM_change = (SELECT MAX(MoM_change)
+    					FROM month_over_month_change);
 ### <i> Insight: </i>
-
+1. March recorded the highest revenue growth rate of 78%, increasing from 2,300 in February to 4,100.
+2. This sharp rise represents the strongest month-over-month performance, indicating high sales momentum and possibly the result of an effective campaign or       product push.
+3. We should investigate the factors that drove the 78% growth in March and replicate those strategies in low-performing months to sustain growth consistency.
 ### <i> Result: </i>
+<img width="1356" height="614" alt="image" src="https://github.com/user-attachments/assets/c96f141e-b784-45ff-bf9c-c9c3dd6b3fc0" />
+
