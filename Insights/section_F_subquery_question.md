@@ -1,7 +1,16 @@
 ## <div align = "center"> Section F — Subquery Question </div>
 
 ### Objective
+This section demonstrates how subqueries can be used to perform comparisons, detect missing data, and identify top performers across different business dimensions.
+It covers scalar, correlated, and multi-row subqueries to answer questions such as:
 
+Which customers spend more than the average?
+
+Which products have never been ordered?
+
+Which suppliers have the highest average prices?
+
+These techniques enable deeper insight into customer performance, product activity, and supplier pricing trends, supporting data-driven business decisions.
 ##
 
 <b> Q21.	Find customers who have placed orders greater than the average order total using a subquery. </b>                                                   
@@ -54,9 +63,7 @@ from the products table where the product ID does not exist in the subquery. Thi
 
 <b> Q23. Find suppliers whose average product price is higher than any other supplier’s average (use > ANY). </b> 
 ### <i> Explanation </i> 
-This question aims to discover which supplier(s) have an average price higher than any other supplier's price. To solve this, I used CTE and subquery. 
-The CTE is to obtain the average price of of each supplier hence the avg_supplier_price CTE. Then the subquery is a repetition of the query in the avg_supplier_price
-CTE. Now with the EXECUTION query 
+This question aims to identify suppliers whose average product price is higher than the average price of other suppliers. To achieve this, a CTE (Common Table Expression) is used to calculate the average price for each supplier (avg_supplier_price). Then, a subquery is used in the WHERE clause with > ANY to compare each supplier’s average price against the averages of all suppliers. Only suppliers whose average price is higher than at least one other supplier’s average are returned.
 
 ### <i> Query: </i>
 
@@ -76,3 +83,38 @@ CTE. Now with the EXECUTION query
                                          GROUP BY supplier_id
     									              	);
 ### <i> Insight: </i>
+1. Suppliers with supplier_id 1, 2, 4, and 5 have higher average product prices compared to some other suppliers.
+2. Supplier 2 has the highest average price (2300.00), which indicates premium pricing for their products.
+3. From this information, we can carry out supplier evaluation, pricing strategy, and identify high-cost suppliers for negotiations or cost analysis.
+### <i> Result: </i>
+<img width="1350" height="555" alt="image" src="https://github.com/user-attachments/assets/92787b23-17d7-4eef-a74d-c3e70c8752bc" /> <br>
+
+-- 24.	Find suppliers whose average product price is greater than all other suppliers (use > ALL).
+### <i> Explanation </i> 
+This task aims to identify the supplier(s) with the highest average product price across all suppliers.
+Using a Common Table Expression (CTE), the query first calculates the average price per supplier from the products table.
+Then, it uses the > ALL operator in the main query to filter suppliers whose average price is greater than every other supplier’s average.
+If no supplier meets this condition, it means that no supplier stands out distinctly above the rest in terms of pricing.
+### <i> Query: </i> 
+
+    WITH avg_supplier_price AS
+    		(
+    		SELECT
+    			supplier_id,
+    			ROUND(AVG(price), 2) AS avg_product_price
+    		FROM products 
+    		GROUP BY supplier_id
+    		)
+    	    SELECT *
+            FROM avg_supplier_price
+            WHERE avg_product_price > ALL (-- subquery to determine AVG prices
+    										SELECT ROUND(AVG(price),2)
+                                            FROM products
+                                            GROUP BY supplier_id
+    										);
+### <i> Insight: </i>
+1.The result shows no supplier has a distinctly higher average price than every other supplier. This indicates a competitive or uniform pricing structure among suppliers, where average product prices are relatively similar.
+2. The lack of outliers suggests that no supplier dominates the premium pricing segment, and pricing strategies are likely aligned across the supply base.
+2.
+### <i> Result: </i>
+<img width="1348" height="559" alt="image" src="https://github.com/user-attachments/assets/363d1675-ed22-4aad-bf0f-6cc0d073836d" />
