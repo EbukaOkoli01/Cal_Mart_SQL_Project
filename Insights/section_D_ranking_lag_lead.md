@@ -39,7 +39,7 @@ This task aims to group customers into performance tiers based on their total sp
 2. Group 3 (Lower-Mid Tier) - Customers 2 and 7 have average spending levels, indicating potential for growth. Group 4 (Bottom 25%) - Customers 5      and 8 are the lowest spenders and represent the group most likely to churn or need reactivation campaigns.
 3. we should Focus retention efforts on Groups 1 and 2, these are loyal, high-value customers. Target Groups 3 and 4 with promotional campaigns,       personalized offers, or bundle discounts to encourage higher spending.
 ### <i> Result: </i>
-<img width="1355" height="614" alt="image" src="https://github.com/user-attachments/assets/bf20b03f-70f5-45ae-bbef-fdb7da3ed924" />
+<img width="1355" height="614" alt="image" src="https://github.com/user-attachments/assets/bf20b03f-70f5-45ae-bbef-fdb7da3ed924" /><br>
 
 
 <b> Q12. Use LAG() and LEAD() to show each user’s previous and next order amount. </b>        
@@ -96,7 +96,7 @@ Increased if spending rose compared to the previous order, Decreased if spending
 ### <i> Result: </i>
 <img width="1339" height="556" alt="image" src="https://github.com/user-attachments/assets/46b7185f-16f7-455b-9897-a61d21b9eacc" /> <br>
 
-<b> Q14. Calculate the cumulative total of sales by month for the entire store./ </b>
+<b> Q14. Calculate the cumulative total of sales by month for the entire store. </b>
 ### <i> Explanation </i>
 The purpose of this analysis is to understand the growth of total sales over time by calculating the cumulative total month by month.
 I solved it using Common Table Expression (CTE). The first CTE with name desired_columns is used to get the relevant columns (order_date and total_amount). Then the second CTE total_by_month gets the aggregate of the amount for each month. Finally, a window function (SUM() OVER(ORDER BY month)) is used to calculate the running total, which shows how sales accumulate throughout the year.
@@ -133,3 +133,72 @@ I solved it using Common Table Expression (CTE). The first CTE with name desired
 ### <i> Result: </i>
 <img width="1356" height="611" alt="image" src="https://github.com/user-attachments/assets/59d92a45-462e-49bf-a507-a31922e2dca9" /> <br>
 
+<b> Q15. Find each order’s percentage rank of total amount compared to all orders in that month. </b>
+### <i> Explanation </i>
+This task focuses on ranking each order relative to other orders placed within the same month. The goal is to understand how individual order amounts compare to the rest - identifying top, mid, and low-value orders for that period. 
+Two window functions are used:
+- PERCENT_RANK(): assigns a percentile rank from 0 to 1 based on position within a month (e.g., 0 = lowest, 1 = highest).
+- CUME_DIST():  calculates the cumulative distribution, showing how many orders fall below or at a given order amount.                                       
+Together, they give a full view of order ranking and distribution within each month which is crucial for performance benchmarking.
+
+### <i> Query: </i>
+
+    SELECT 
+    		order_id,
+            MONTH(order_date) AS `month`,
+            total_amount,
+            CONCAT(PERCENT_RANK() OVER(PARTITION BY MONTH(order_date) ORDER BY total_amount), '%') AS perc_rank_total_amount_per_month,
+            CONCAT(CUME_DIST() OVER(PARTITION BY MONTH(order_date) ORDER BY total_amount), '%') AS cummulative_distr_total_amount_per_month
+    FROM orders;
+### <i> Insight: </i>
+1. Across all months, orders generally fall into two tiers, a low-value order (0% rank) and a high-value order (1% rank).
+2. This indicates that each month had a small number of orders, typically one high and one low spender.
+3. Encourage more mid-range purchases to balance revenue distribution and also introduce tier-based rewards to motivate smaller buyers to move up in rank.
+### <i> Result: </i>
+<img width="1361" height="615" alt="image" src="https://github.com/user-attachments/assets/2aa081d5-d63d-49c2-a125-5f4c0f0e8080" /><br>
+
+<b> Q16. what percentage of total sales does each order represents per month </b>
+### <i> Explanation </i>
+This task measures how much each order contributes to the total monthly sales. It essentially shows individual order impact within its month. In the code below, the window function with PARTITION BY MONTH(order_date) is to calculate the total sales in that particular month then we can obtain the percentage each sales in the month contribute as a percentage of the overall total by dividing each order’s total amount by that monthly total and multiplies by 100 to get the percentage contribution of each order.
+
+### <i> Query: </i>
+    SELECT 
+    		order_id,
+            MONTH(order_date) AS `month`,
+            total_amount,
+            SUM(total_amount) OVER(PARTITION BY MONTH(order_date)) AS total_sales_per_month,
+            CONCAT(ROUND(((total_amount)/SUM(total_amount) OVER(PARTITION BY MONTH(order_date)))*100,2),'%') AS percentage_total_sales_per_month
+    FROM orders;
+### <i> Insight: </i>  
+1. In most months, a single order contributes between 60%–70% of the total monthly revenue. This suggests that monthly sales are concentrated around a few large transactions, creating dependency on high-value customers.
+2. April (5,000) and February (2,300) each had 100% single-order revenue, showing low order frequency but high-value sales.
+3. Months like January, March, May, and June had multiple orders, but still showed uneven distribution. The largest orders contributed over 55% of monthly sales. This uneven spread means the business’s revenue performance depends on a small number of high-value purchases rather than broad customer participation.
+4. We should focus on customer acquisition and encourage repeat smaller orders to balance sales distribution and also Use targeted campaigns to convert one-time large buyers into consistent purchasers.
+### <i> Result: </i>
+<img width="1361" height="548" alt="image" src="https://github.com/user-attachments/assets/67182813-9971-428e-8bc5-58b2e57185b9" /><br>
+
+<b> Q17. what percentage does each month total sales contribute to the total sales per month</b>
+### <i> Explanation </i>
+This analysis evaluates how much each month contributes to the company’s total annual sales. It helps identify peak sales months, slow periods, and overall revenue distribution trends. In the code below, I used subquery to determine first the total sales per month, then the main query determines how each of the total sales contributes to the overall sales per year in percentage. This makes it possible to visualize which months drive growth and which need improvement, helping with forecasting and performance evaluation.
+### <i> Query: </i>
+
+    -- Mani query
+    SELECT
+    		`month`,
+    		 total_sales_per_month,
+            CONCAT(ROUND((total_sales_per_month/(SUM(total_sales_per_month) OVER())) *100,2), '%') AS percentage_of_overall_sales
+    FROM
+    (-- Subquery to determine total sales per month
+     SELECT 
+            MONTH(order_date) AS `month`,
+            SUM(total_amount) AS total_sales_per_month
+    FROM orders
+    GROUP BY MONTH(order_date)
+    ) AS p;
+### <i> Insight: </i>  
+1. April contributed the highest share of annual revenue (20.08%), making it the peak month for sales performance.
+2. February (9.24%) recorded the lowest contribution, suggesting a slower sales period or lower customer activity.
+3. The overall trend suggests a balanced distribution of sales throughout the year, with moderate peaks and no extreme dips.
+4. Investigate April’s success which could possibly be a promotional campaign or seasonal demand, replicate that strategy in weaker months. Also Implement marketing pushes during low-performing months (February & June) to balance sales across the year.
+### <i> Result: </i>
+<img width="1356" height="591" alt="image" src="https://github.com/user-attachments/assets/314259bf-bf3d-4796-bff3-248d54106fdf" />
