@@ -4,12 +4,9 @@
 This section demonstrates how subqueries can be used to perform comparisons, detect missing data, and identify top performers across different business dimensions.
 It covers scalar, correlated, and multi-row subqueries to answer questions such as:
 
-Which customers spend more than the average?
-
-Which products have never been ordered?
-
-Which suppliers have the highest average prices?
-
+- Which customers spend more than the average?
+- Which products have never been ordered?
+- Which suppliers have the highest average prices?                                                                                                   
 These techniques enable deeper insight into customer performance, product activity, and supplier pricing trends, supporting data-driven business decisions.
 ##
 
