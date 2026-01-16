@@ -40,7 +40,7 @@ To identify the product category with lowest sales, I solved it from the quantit
 
 ### <i> Query 1: In terms of REVENUE </i>
 This query joins the Products and Orders tables on product_id to access both the total_amount and category columns.
-The total sales amount per category is calculated using SUM(o.total_amount) and ranked using the RANK() window function.
+The total sales amount per category is calculated using SUM(o.total_amount) and ranked using the RANK() window function.<br>
 Finally, the main query filters the result to only show the category ranked 1, which represents the lowest-selling category by revenue.
 
     -- Main Query
@@ -86,9 +86,11 @@ Method 2-
 
 <b> Q27. Find customers who made a purchase every month in 2024. </b>                                                   
 ### <i> Explanation </i> 
-TO obtain customers who made purchase for each month consecutively in 2024, I had to first filter the YEAR(order_date) = 2024. This nsure that the data I am working with is only in 2024 after then in my SELECT clause, I obtained the distinct month for each customer's orders. Once this was done, I embeded it as a subquery in the FROM clause. In the main query, I selected the user_id, did a count of each row in the table nut for each individual user then filtered using the HAVIONG function for customers having count(*) = 12. THis ensures that only thise who bought for the 12 months in 2024 are seected. below is the code 
+To identify customers who made purchases in every month of 2024, I first filtered the dataset using YEAR(order_date) = 2024 to ensure only transactions from that year were considered. In the subquery, I selected the distinct month for each customer to remove duplicate purchases within the same month. This subquery was then placed in the FROM clause, and in the main query, I counted the total number of unique months per customer using COUNT(*).<br>
+Finally, I used a HAVING clause to filter for customers with a count of 12, meaning they made purchases in all 12 months of the year.
+This approach effectively identifies consistent monthly buyers within the specified period.
 
-### <i> Query 1:</i>
+### <i> Query:</i>
 
     SELECT 
     	user_id,
@@ -109,16 +111,45 @@ TO obtain customers who made purchase for each month consecutively in 2024, I ha
 2. Introduction of a customer retention program or loyalty incentives will encourage monthly repeat purchases.
 3. Track purchase frequency metrics such as Customer Retention Rate (CRR) to monitor progress over time.                               
 ### <i> Result: </i> 
-<img width="1116" height="452" alt="image" src="https://github.com/user-attachments/assets/93d17efb-037c-451a-a8cd-c6c5f943e5ab" />
+<img width="1116" height="452" alt="image" src="https://github.com/user-attachments/assets/93d17efb-037c-451a-a8cd-c6c5f943e5ab" /><br>
 
+<b> Q28. Calculate the average time between consecutive orders for each customer (advanced LAG challenge). </b> 
+### <i> Explanation </i> 
+To solve this problem, I used a Common Table Expression (CTE) to make the steps more structured and readable.<br>
+The first CTE (cus_orders) was used to create a new column showing each customer’s previous order date. This was achieved using the LAG() window function, which looks at the previous row within each customer’s order history.<br>
+The second CTE (days_btwn_orders) calculated the difference in days between each customer’s current and previous order using the TIMESTAMPDIFF() function.<br>
+Finally, the main query applied the AVG() function and GROUP BY user_id to compute the average number of days between consecutive orders for each unique customer. This gives a clear measure of customer purchase frequency.
 
-<b> Q28. Calculate the average time between consecutive orders for each customer (advanced LAG challenge). </b>     
+### <i> Query:</i>
 
+    WITH cus_orders AS 
+    		(SELECT 
+    				user_id,
+    				order_date AS current_order,
+    				LAG(order_date) OVER(PARTITION BY user_id ORDER BY order_date ASC) AS previous_order
+    		FROM orders),
+    days_btwn_orders AS 
+    		(
+    		SELECT 
+    				*,
+                    TIMESTAMPDIFF(DAY, previous_order, current_order) AS days_diff
+            FROM cus_orders
+    		)
+    SELECT 
+    		user_id,
+            ROUND(AVG(days_diff),2) AS avg_days_between_orders
+    FROM days_btwn_orders
+    WHERE days_diff IS NOT NULL
+    GROUP BY user_id;
 
+### <i> Insight | Recommendation: </i>
+1. The maximum order frequency per customer was two purchases, indicating low engagement with an average gap of about 182 days.
+2. 50% of customers made only one purchase in the period, showing limited repeat buying behaviour.
+3. A customer loyalty or reward program should be introduced to encourage repeat purchases and strengthen retention.
+4. Track Active Customer Percentage and Customer Churn Rate (CCR) regularly to monitor behaviour and measure improvement from retention efforts.
 
-
-
-
+### <i> Result: </i> 
+<img width="1104" height="494" alt="image" src="https://github.com/user-attachments/assets/e979d0bb-7911-4d49-9734-9e164522e151" />
 
 
 
