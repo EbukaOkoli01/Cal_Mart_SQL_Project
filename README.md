@@ -45,7 +45,8 @@ This project explores real-world retail operations and customer analytics throug
 
 
 ### PURPOSE -                                                                                                                                                                             
-To strengthen SQL problem-solving skills by simulating business scenarios that require both data cleaning and insight generation, showing how data drives growth decisions in retail.                                                                                                
+To demonstrate how SQL can be used to answer key business questions, generate insights, and support data-driven decision making in retail.
+This project also strengthens analytical thinking, data cleaning, and problem-solving skills through structured query writing.                                                                                                
 ### 📂 REPOSITORY CONTENT
 - datasets: CSV files used for the project  
 - queries: SQL scripts grouped by difficulty  
